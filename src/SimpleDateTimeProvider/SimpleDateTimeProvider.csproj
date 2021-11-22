@@ -14,6 +14,7 @@
     <PackageIcon>icon.png</PackageIcon>
     <PackageProjectUrl>https://github.com/stphnwlsh/$(AssemblyName)</PackageProjectUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <Description>A simple abstraction over C#'s DateTime.Now, DateTime.Today and DateTime.UtcNow so you can control these values in your tests.</Description>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/stphnwlsh/$(AssemblyName)</RepositoryUrl>
@@ -39,10 +40,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="icon.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
+    <None Include="icon.png" Pack="true" PackagePath="\"/>
+    <None Include="README.md" Pack="true" PackagePath="\"/>
   </ItemGroup>
 
   <ItemGroup>
