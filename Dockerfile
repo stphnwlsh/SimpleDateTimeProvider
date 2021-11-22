@@ -50,4 +50,4 @@ ARG VERSION_SUFFIX
 RUN dotnet pack ./src/**/*.csproj --no-restore -c Release -v quiet -o nuget -p:VersionPrefix=${VERSION_PREFIX} -p:VersionSuffix=${VERSION_SUFFIX}
 
 FROM scratch AS nuget
-COPY --from=pack /nuget/* .
+COPY --from=pack /sln/nuget/* .

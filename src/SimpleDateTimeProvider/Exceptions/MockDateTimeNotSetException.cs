@@ -4,6 +4,9 @@ namespace SimpleDateTimeProvider.Exceptions
     using System.Runtime.Serialization;
     using System.Text.Json.Serialization;
 
+    /// <summary>
+    /// A custom <see cref="Exception"/> to handle the incorrectly setup MockDateTimeProviders.
+    /// </summary>
     [Serializable]
     public class MockDateTimeNotSetException : Exception
     {

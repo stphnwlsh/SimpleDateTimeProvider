@@ -2,6 +2,7 @@ namespace SimpleDateTimeProvider
 {
     using System;
     using SimpleDateTimeProvider.Enums;
+    using SimpleDateTimeProvider.Exceptions;
     using SimpleDateTimeProvider.Extentions;
 
     /// <summary>
@@ -17,7 +18,7 @@ namespace SimpleDateTimeProvider
         /// Gets a System.DateTime object that is set to the current date and time on this computer, expressed as the local time.
         /// </summary>
         /// <exception cref="MockDateTimeNotSetException">
-        /// Thrown if the <paramref name="now"/> has not been set.
+        /// Thrown if the <see cref="Now"/> has not been set.
         /// </exception>
         /// <returns>
         /// A <see cref="DateTime">System.DateTime</see> that has been previously set to return.
@@ -32,7 +33,7 @@ namespace SimpleDateTimeProvider
         /// Gets the current date.
         /// </summary>
         /// <exception cref="MockDateTimeNotSetException">
-        /// Thrown if the <paramref name="now"/> has not been set.
+        /// Thrown if the <see cref="Today"/> has not been set.
         /// </exception>
         /// <returns>
         /// A <see cref="DateTime">System.DateTime</see> that has been previously set to return.
@@ -47,7 +48,7 @@ namespace SimpleDateTimeProvider
         /// Gets a <see cref="DateTime">System.DateTime</see> object that is set to the current date and time on this computer, expressed as the Coordinated Universal Time (UTC).
         /// </summary>
         /// <exception cref="MockDateTimeNotSetException">
-        /// Thrown if the <paramref name="now"/> has not been set.
+        /// Thrown if the <see cref="UtcNow"/> has not been set.
         /// </exception>
         /// <returns>
         /// A <see cref="DateTime">System.DateTime</see> that has been previously set to return.
