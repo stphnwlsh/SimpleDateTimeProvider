@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.31911.260
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C6724B35-6832-4975-91EB-4A8FE0263153}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{96B1B2C3-3ED4-4D7F-BF33-753C3E4B7575}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{358B0DD9-D3DC-49C3-A765-6494F3C8B144}"
+	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
+		.editorconfig = .editorconfig
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		Dockerfile = Dockerfile
+		LICENSE.md = LICENSE.md
+		NuGet.config = NuGet.config
+		NUGET.md = NUGET.md
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleDateTimeProvider", "src\SimpleDateTimeProvider\SimpleDateTimeProvider.csproj", "{B752F97A-6D15-40D6-A736-3FC351057582}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleDateTimeProvider.Tests.Unit", "tests\SimpleDateTimeProvider.Tests.Unit\SimpleDateTimeProvider.Tests.Unit.csproj", "{927436A3-580B-4397-B79C-701B784F9FF5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B752F97A-6D15-40D6-A736-3FC351057582}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B752F97A-6D15-40D6-A736-3FC351057582}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B752F97A-6D15-40D6-A736-3FC351057582}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B752F97A-6D15-40D6-A736-3FC351057582}.Release|Any CPU.Build.0 = Release|Any CPU
+		{927436A3-580B-4397-B79C-701B784F9FF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{927436A3-580B-4397-B79C-701B784F9FF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{927436A3-580B-4397-B79C-701B784F9FF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{927436A3-580B-4397-B79C-701B784F9FF5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B752F97A-6D15-40D6-A736-3FC351057582} = {C6724B35-6832-4975-91EB-4A8FE0263153}
+		{927436A3-580B-4397-B79C-701B784F9FF5} = {96B1B2C3-3ED4-4D7F-BF33-753C3E4B7575}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {053B54FE-C565-4394-878B-09562316EEB1}
+	EndGlobalSection
+EndGlobal
