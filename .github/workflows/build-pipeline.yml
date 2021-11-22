@@ -84,15 +84,36 @@ jobs:
         echo "::set-output name=branch::$(eval printf "%s" "$BRANCH_CURRENT")"
       shell: bash
 
+    - name: Setup .NET Core 3.1
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.x
+
+    - name: Setup .NET 5.0
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+
+    - name: Setup .NET 6.0
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Restore
+      id: restore
+      run: dotnet restore -v minimal
+
     - name: Build
       id: build
-      run: docker build .
-        --target coverage
-        --output type=local,dest=out
-        --build-arg VERSION_PREFIX=$VERSION_PREFIX
-        --build-arg VERSION_SUFFIX=$VERSION_SUFFIX
+      run: dotnet build --no-restore -c Release -v minimal -p:VersionPrefix=${VERSION_PREFIX} -p:VersionSuffix=${VERSION_SUFFIX}
       env:
-        DOCKER_BUILDKIT: 1
+        VERSION_PREFIX: ${{ steps.initialize.outputs.version_prefix }}
+        VERSION_SUFFIX: ${{ steps.initialize.outputs.version_suffix }}
+
+    - name: Test
+      id: test
+      run: dotnet test --no-restore --no-build -c Release -v minimal -p:CollectCoverage=true  -p:CoverletOutput=../results/ -p:MergeWith="../results/coverage.json" -p:CoverletOutputFormat=opencover%2cjson -m:1
+      env:
         VERSION_PREFIX: ${{ steps.initialize.outputs.version_prefix }}
         VERSION_SUFFIX: ${{ steps.initialize.outputs.version_suffix }}
 
@@ -100,18 +121,13 @@ jobs:
       id: analysis
       uses: codecov/codecov-action@v1
       with:
-        files: ./out/coverage.opencover.xml
+        files: ./tests/results/coverage.opencover.xml
         token: ${{ secrets.CODECOV_TOKEN }}
 
     - name: Pack
       id: pack
-      run: docker build .
-        --target pack
-        --output type=local,dest=nuget
-        --build-arg VERSION_PREFIX=$VERSION_PREFIX
-        --build-arg VERSION_SUFFIX=$VERSION_SUFFIX
+      run: dotnet pack ./src/**/*.csproj --no-restore -c Release -v quiet -o nuget -p:VersionPrefix=${VERSION_PREFIX} -p:VersionSuffix=${VERSION_SUFFIX}
       env:
-        DOCKER_BUILDKIT: 1
         VERSION_PREFIX: ${{ steps.initialize.outputs.version_prefix }}
         VERSION_SUFFIX: ${{ steps.initialize.outputs.version_suffix }}
 
