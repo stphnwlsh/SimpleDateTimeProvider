@@ -121,7 +121,7 @@ jobs:
       id: analysis
       uses: codecov/codecov-action@v1
       with:
-        files: ./tests/results/coverage.opencover.xml
+        files: ./tests/results/coverage.net6.0.opencover.xml
         token: ${{ secrets.CODECOV_TOKEN }}
 
     - name: Pack
@@ -141,8 +141,3 @@ jobs:
       id: publish
       if: ${{ github.ref == 'refs/heads/main' }}
       run: nuget push nuget/*.nupkg -src https://api.nuget.org/v3/index.json
-
-    - name: Symbols
-      id: symbols
-      if: ${{ github.ref == 'refs/heads/main' }}
-      run: nuget push nuget/*.snupkg -src https://api.nuget.org/v3/index.json
