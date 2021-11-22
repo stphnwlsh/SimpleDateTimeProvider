@@ -1,4 +1,4 @@
-namespace SimpleDateTimeProvider.Tests.Unit
+namespace SimpleDateTimeProvider.Tests
 {
     using System;
     using Shouldly;
