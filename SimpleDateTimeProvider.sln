@@ -9,20 +9,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{96B1B2C3
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{358B0DD9-D3DC-49C3-A765-6494F3C8B144}"
 	ProjectSection(SolutionItems) = preProject
-		.dockerignore = .dockerignore
-		.editorconfig = .editorconfig
-		.gitattributes = .gitattributes
-		.gitignore = .gitignore
-		Dockerfile = Dockerfile
+		global.json = global.json
 		LICENSE.md = LICENSE.md
 		NuGet.config = NuGet.config
-		NUGET.md = NUGET.md
 		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleDateTimeProvider", "src\SimpleDateTimeProvider\SimpleDateTimeProvider.csproj", "{B752F97A-6D15-40D6-A736-3FC351057582}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleDateTimeProvider.Tests.Unit", "tests\SimpleDateTimeProvider.Tests.Unit\SimpleDateTimeProvider.Tests.Unit.csproj", "{927436A3-580B-4397-B79C-701B784F9FF5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleDateTimeProvider.Tests.Unit", "tests\SimpleDateTimeProvider.Tests.Unit\SimpleDateTimeProvider.Tests.Unit.csproj", "{23FA38E0-09D6-4C7A-BA7D-D0B6629322F4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{13DE4589-329A-48AE-94EF-320FE0120E08}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp", "sample\ConsoleApp\ConsoleApp.csproj", "{81227DA9-E07D-4250-BAC7-831411B3CD3D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp.Tests", "sample\ConsoleApp.Tests\ConsoleApp.Tests.csproj", "{06B53CBF-F3EB-4A31-8175-82C23B35E926}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,17 +35,27 @@ Global
 		{B752F97A-6D15-40D6-A736-3FC351057582}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B752F97A-6D15-40D6-A736-3FC351057582}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B752F97A-6D15-40D6-A736-3FC351057582}.Release|Any CPU.Build.0 = Release|Any CPU
-		{927436A3-580B-4397-B79C-701B784F9FF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{927436A3-580B-4397-B79C-701B784F9FF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{927436A3-580B-4397-B79C-701B784F9FF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{927436A3-580B-4397-B79C-701B784F9FF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23FA38E0-09D6-4C7A-BA7D-D0B6629322F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23FA38E0-09D6-4C7A-BA7D-D0B6629322F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23FA38E0-09D6-4C7A-BA7D-D0B6629322F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23FA38E0-09D6-4C7A-BA7D-D0B6629322F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81227DA9-E07D-4250-BAC7-831411B3CD3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81227DA9-E07D-4250-BAC7-831411B3CD3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81227DA9-E07D-4250-BAC7-831411B3CD3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81227DA9-E07D-4250-BAC7-831411B3CD3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06B53CBF-F3EB-4A31-8175-82C23B35E926}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06B53CBF-F3EB-4A31-8175-82C23B35E926}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06B53CBF-F3EB-4A31-8175-82C23B35E926}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06B53CBF-F3EB-4A31-8175-82C23B35E926}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B752F97A-6D15-40D6-A736-3FC351057582} = {C6724B35-6832-4975-91EB-4A8FE0263153}
-		{927436A3-580B-4397-B79C-701B784F9FF5} = {96B1B2C3-3ED4-4D7F-BF33-753C3E4B7575}
+		{23FA38E0-09D6-4C7A-BA7D-D0B6629322F4} = {96B1B2C3-3ED4-4D7F-BF33-753C3E4B7575}
+		{81227DA9-E07D-4250-BAC7-831411B3CD3D} = {13DE4589-329A-48AE-94EF-320FE0120E08}
+		{06B53CBF-F3EB-4A31-8175-82C23B35E926} = {13DE4589-329A-48AE-94EF-320FE0120E08}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {053B54FE-C565-4394-878B-09562316EEB1}
