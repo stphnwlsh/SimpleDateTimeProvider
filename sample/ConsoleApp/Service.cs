@@ -1,29 +1,28 @@
-namespace ConsoleApp
+namespace ConsoleApp;
+
+using SimpleDateTimeProvider;
+
+public class Service
 {
-    using SimpleDateTimeProvider;
+    private readonly IDateTimeProvider dateTimeProvider;
 
-    public class Service
+    public Service(IDateTimeProvider dateTimeProvider)
     {
-        private readonly IDateTimeProvider dateTimeProvider;
+        this.dateTimeProvider = dateTimeProvider;
+    }
 
-        public Service(IDateTimeProvider dateTimeProvider)
-        {
-            this.dateTimeProvider = dateTimeProvider;
-        }
+    public string DateTimeNow()
+    {
+        return $"DateTime.Now is {this.dateTimeProvider.Now}";
+    }
 
-        public string DateTimeNow()
-        {
-            return $"DateTime.Now is {this.dateTimeProvider.Now}";
-        }
+    public string DateTimeToday()
+    {
+        return $"DateTime.Today is {this.dateTimeProvider.Today}";
+    }
 
-        public string DateTimeToday()
-        {
-            return $"DateTime.Today is {this.dateTimeProvider.Today}";
-        }
-
-        public string DateTimeUtcNow()
-        {
-            return $"DateTime.UtcNow is {this.dateTimeProvider.UtcNow}";
-        }
+    public string DateTimeUtcNow()
+    {
+        return $"DateTime.UtcNow is {this.dateTimeProvider.UtcNow}";
     }
 }
