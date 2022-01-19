@@ -1,11 +1,11 @@
 # SimpleDateTimeProvider
 
-A simple abstraction over C#'s DateTime.Now, DateTime.Today and DateTime.UtcNow so you can control these values in your tests. No longer do you have to attempt shennanigans in your tests to handle when you need to use those values in your code.
+A simple abstraction over C#'s `DateTime.Now`, `DateTime.Today` and `DateTime.UtcNow` so you can control these values in your tests. No longer do you have to attempt shennanigans in your tests to handle when you need to use those values in your code.
 
 ## Features
 
  * `SystemDateTimeProvider` - Abstraction over the top of System.DateTime. 
- * `MockDateTimeProvider` - Mockable provider to control DateTime values in test projects.
+ * `MockDateTimeProvider` - Provider used to mock DateTime values in test projects.
 
 
 ## Setup
@@ -41,7 +41,7 @@ The whole purpose of this was to allow for testable code.  So now that you have 
 
 ```csharp
 [Fact]
-public void Now_ShouldReturn_MockedToday()
+public void Today_ShouldReturn_MockedToday()
 {
     // Arrange
     var provider = new MockDateTimeProvider();
