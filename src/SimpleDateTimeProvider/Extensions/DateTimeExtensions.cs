@@ -1,8 +1,8 @@
-namespace SimpleDateTimeProvider.Extentions
+namespace SimpleDateTimeProvider.Extensions
 {
     using System;
-    using SimpleDateTimeProvider.Enums;
-    using SimpleDateTimeProvider.Exceptions;
+    using Enums;
+    using Exceptions;
 
     internal static class DateTimeExtensions
     {
@@ -10,10 +10,10 @@ namespace SimpleDateTimeProvider.Extentions
         /// Throws an <see cref="MockDateTimeNotSetException"/> if the value on the  <see cref="DateTime"/> has not been set.
         /// </summary>
         /// <param name="dateTime">
-        /// The <see cref="DateTime"/> object being evalidated.
+        /// The <see cref="DateTime"/> object being validated.
         /// </param>
         /// <param name="type">
-        /// The <see cref="DateTimeType"/> being evalidated, included in exception message if required.
+        /// The <see cref="DateTimeType"/> being validated, included in exception message if required.
         /// </param>
         /// <exception cref="MockDateTimeNotSetException">
         /// Thrown if the <paramref name="dateTime"/> has not been set.

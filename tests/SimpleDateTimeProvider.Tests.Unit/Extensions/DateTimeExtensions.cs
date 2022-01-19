@@ -1,11 +1,11 @@
-namespace SimpleDateTimeProvider.Tests.Unit.Extentions
+namespace SimpleDateTimeProvider.Tests.Unit.Extensions
 {
     using System;
     using AutoFixture.Xunit2;
     using Shouldly;
     using SimpleDateTimeProvider.Enums;
     using SimpleDateTimeProvider.Exceptions;
-    using SimpleDateTimeProvider.Extentions;
+    using SimpleDateTimeProvider.Extensions;
     using Xunit;
 
     public class DateTimeExtensions

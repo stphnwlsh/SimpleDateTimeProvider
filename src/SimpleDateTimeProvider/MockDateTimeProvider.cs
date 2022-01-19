@@ -1,9 +1,9 @@
 namespace SimpleDateTimeProvider
 {
     using System;
-    using SimpleDateTimeProvider.Enums;
-    using SimpleDateTimeProvider.Exceptions;
-    using SimpleDateTimeProvider.Extentions;
+    using Enums;
+    using Exceptions;
+    using Extensions;
 
     /// <summary>
     /// Defines a DateTime implementation that returns the mocked values for use in testing.
