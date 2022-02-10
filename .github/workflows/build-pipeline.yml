@@ -89,11 +89,6 @@ jobs:
       with:
         dotnet-version: 3.1.x
 
-    - name: Setup .NET 5.0
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 5.0.x
-
     - name: Setup .NET 6.0
       uses: actions/setup-dotnet@v1
       with:
@@ -126,7 +121,7 @@ jobs:
 
     - name: Pack
       id: pack
-      run: dotnet pack ./src/**/*.csproj --no-restore -c Release -v quiet -o nuget -p:VersionPrefix=${VERSION_PREFIX} -p:VersionSuffix=${VERSION_SUFFIX}
+      run: dotnet pack ./src/**/*.csproj --no-restore -c Release -v quiet -o nuget -p:ContinuousIntegrationBuild=true -p:VersionPrefix=${VERSION_PREFIX} -p:VersionSuffix=${VERSION_SUFFIX}
       env:
         VERSION_PREFIX: ${{ steps.initialize.outputs.version_prefix }}
         VERSION_SUFFIX: ${{ steps.initialize.outputs.version_suffix }}

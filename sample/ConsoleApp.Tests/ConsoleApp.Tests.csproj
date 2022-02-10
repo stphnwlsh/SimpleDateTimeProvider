@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <IsPackable>false</IsPackable>
-    <NoWarn>CA1707</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,10 +18,6 @@
   <ItemGroup>
     <ProjectReference Include="..\ConsoleApp\ConsoleApp.csproj" />
     <ProjectReference Include="..\..\src\SimpleDateTimeProvider\SimpleDateTimeProvider.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Properties\" />
   </ItemGroup>
 
 </Project>
