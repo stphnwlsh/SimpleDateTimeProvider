@@ -31,7 +31,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.43.0.51858">
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.44.0.52574">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
