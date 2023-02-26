@@ -2,7 +2,7 @@ name: Automated Dependency Updates
 
 on:
   schedule:
-    - cron:  '0 0 * * 0'
+    - cron:  '0 0 1 * 0'
 
 jobs:
   dependencies:
@@ -21,10 +21,10 @@ jobs:
       with:
           token: ${{ secrets.AUTOMATED_DEPENDENCY_UPDATES_TOKEN }}
 
-    - name: Setup .NET Core 3.1
+    - name: Setup .NET 7.0
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.x
+        dotnet-version: 7.0.x
 
     - name: Setup .NET 6.0
       uses: actions/setup-dotnet@v1
