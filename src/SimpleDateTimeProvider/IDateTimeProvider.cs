@@ -1,4 +1,4 @@
-﻿namespace SimpleDateTimeProvider
+namespace SimpleDateTimeProvider
 {
     using System;
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using ConsoleApp;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleDateTimeProvider;
