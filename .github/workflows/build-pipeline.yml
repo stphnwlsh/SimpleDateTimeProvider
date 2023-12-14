@@ -84,6 +84,12 @@ jobs:
         echo "::set-output name=branch::$(eval printf "%s" "$BRANCH_CURRENT")"
       shell: bash
 
+
+    - name: Setup .NET 8.0
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 8.0.x
+
     - name: Setup .NET 7.0
       uses: actions/setup-dotnet@v1
       with:
@@ -116,7 +122,7 @@ jobs:
       id: analysis
       uses: codecov/codecov-action@v1
       with:
-        files: ./tests/results/coverage.net6.0.opencover.xml
+        files: ./tests/results/coverage.net8.0.opencover.xml
         token: ${{ secrets.CODECOV_TOKEN }}
 
     - name: Pack
