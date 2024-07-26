@@ -1,7 +1,6 @@
 namespace SimpleDateTimeProvider.Tests.Unit.Exceptions
 {
     using System.IO;
-    using System.Runtime.Serialization.Formatters.Binary;
     using System.Text.Json;
     using Shouldly;
     using SimpleDateTimeProvider.Exceptions;
