@@ -2,105 +2,318 @@ name: Build Pipeline
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
+  schedule:
+    # Maintenance build on the 15th, after Dependabot's monthly pull request.
+    - cron: "17 9 15 * *"
+      timezone: "America/Chicago"
+    # Monthly release on the 1st. Off the hour, because GitHub delays more runs at :00.
+    - cron: "17 9 1 * *"
+      timezone: "America/Chicago"
+  workflow_dispatch:
+    inputs:
+      run:
+        description: Which monthly run to rehearse or trigger
+        type: choice
+        options: [release, maintenance]
+        default: release
+      dry-run:
+        description: Rehearse only. Packs and logs in to NuGet, but publishes nothing
+        type: boolean
+        default: true
+      force:
+        description: Release even if nothing in src/ has changed since the last release
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  COVERAGE_THRESHOLD: 95
 
 jobs:
-  pipeline:
-    name: Build, Test and Publish
+  build:
+    name: Build
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
 
-    strategy:
-      fail-fast: true
-      matrix:
-        language: [ 'csharp' ]
+    outputs:
+      version: ${{ steps.initialize.outputs.version }}
 
     steps:
-    - name: Checkout
-      id: checkout
-      uses: actions/checkout@v4
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v7
 
-    - name: Setup .NET 8.0
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 8.0.x
+      - name: Initialize
+        id: initialize
+        run: |
+          VERSION_PREFIX=$(date +'%Y.%m.%d').${GITHUB_RUN_NUMBER}
+          VERSION_SUFFIX=""
 
-    - name: Setup .NET 6.0
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 6.0.x
+          if [[ "$GITHUB_EVENT_NAME" == 'pull_request' ]]; then
+            VERSION_SUFFIX="pr-${PR_NUMBER}"
+          fi
 
-    - name: Initialize
-      id: initialize
-      run: |
-        NAME=$(echo ${GITHUB_REPOSITORY} | tr '[:upper:]' '[:lower:]')
-        VERSION_PREFIX=$(date +'%Y.%m.%d').${GITHUB_RUN_NUMBER}
-        BRANCH_CURRENT=${GITHUB_REF#refs/*/}
-        BRANCH_CURRENT=${BRANCH_CURRENT//[^a-zA-Z0-9]/-}
+          VERSION=$VERSION_PREFIX${VERSION_SUFFIX:+-$VERSION_SUFFIX}
 
-        if [[ ${GITHUB_EVENT_NAME} == 'pull_request' ]]; then
-          BRANCH_BASE=${GITHUB_BASE_REF#refs/*/}
-          BRANCH_BASE=${BRANCH_BASE/[^a-zA-Z0-9]//-}
-          BRANCH_COMPARE=${GITHUB_HEAD_REF#refs/*/}
-          BRANCH_COMPARE=${BRANCH_COMPARE//[^a-zA-Z0-9]/-}
-          VERSION_SUFFIX="merge-${BRANCH_BASE}-${BRANCH_COMPARE}"
-        elif [[ ${GITHUB_EVENT_NAME} == ${{ github.event.repository.default_branch }} ]]; then
-          VERSION_SUFFIX="${BRANCH_CURRENT}"
-        fi
+          {
+            echo "version_prefix=$VERSION_PREFIX"
+            echo "version_suffix=$VERSION_SUFFIX"
+            echo "version=$VERSION"
+          } >> "$GITHUB_OUTPUT"
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        shell: bash
 
-        if [[ $VERSION_SUFFIX == '' ]]; then
-          DOCKER_TAG=$VERSION_PREFIX
-        else
-          DOCKER_TAG=$VERSION_PREFIX-$VERSION_SUFFIX
-        fi
+      - name: Setup .NET
+        id: setup
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '10.0.x'
 
-        echo "::set-output name=name::$(eval printf "%s" "$NAME")"
-        echo "::set-output name=version_prefix::$(eval printf "%s" "$VERSION_PREFIX")"
-        echo "::set-output name=version_suffix::$(eval printf "%s" "$VERSION_SUFFIX")"
-        echo "::set-output name=docker_tag::$(eval printf "%s" "$DOCKER_TAG")"
-        echo "::set-output name=branch::$(eval printf "%s" "$BRANCH_CURRENT")"
-      shell: bash
+      - name: Format
+        id: format
+        run: dotnet format --verify-no-changes --verbosity diagnostic
 
-    - name: Restore
-      id: restore
-      run: dotnet restore -v minimal
+      - name: Build
+        id: build
+        run: dotnet build --configuration Release -p:VersionPrefix="$VERSION_PREFIX" -p:VersionSuffix="$VERSION_SUFFIX"
+        env:
+          VERSION_PREFIX: ${{ steps.initialize.outputs.version_prefix }}
+          VERSION_SUFFIX: ${{ steps.initialize.outputs.version_suffix }}
 
-    - name: Build
-      id: build
-      run: dotnet build --no-restore -c Release -v minimal -p:VersionPrefix=${VERSION_PREFIX} -p:VersionSuffix=${VERSION_SUFFIX}
-      env:
-        VERSION_PREFIX: ${{ steps.initialize.outputs.version_prefix }}
-        VERSION_SUFFIX: ${{ steps.initialize.outputs.version_suffix }}
+      - name: Test
+        id: test
+        run: >-
+          dotnet test --configuration Release --no-build
+          -p:CollectCoverage=true
+          -p:Threshold="$COVERAGE_THRESHOLD"
+          -p:ThresholdType=line
+          -p:Include="[SimpleDateTimeProvider]*"
 
-    - name: Test
-      id: test
-      run: dotnet test --no-restore --no-build -c Release -v minimal -p:CollectCoverage=true  -p:CoverletOutput=../results/ -p:MergeWith="../results/coverage.json" -p:CoverletOutputFormat=opencover%2cjson -m:1
-      env:
-        VERSION_PREFIX: ${{ steps.initialize.outputs.version_prefix }}
-        VERSION_SUFFIX: ${{ steps.initialize.outputs.version_suffix }}
+      - name: Pack
+        id: pack
+        run: dotnet pack src/SimpleDateTimeProvider/SimpleDateTimeProvider.csproj --configuration Release --no-build --output packages -p:VersionPrefix="$VERSION_PREFIX" -p:VersionSuffix="$VERSION_SUFFIX"
+        env:
+          VERSION_PREFIX: ${{ steps.initialize.outputs.version_prefix }}
+          VERSION_SUFFIX: ${{ steps.initialize.outputs.version_suffix }}
 
-    - name: Analysis
-      id: analysis
-      uses: codecov/codecov-action@v3
-      with:
-        files: ./tests/results/coverage.net8.0.opencover.xml
-        token: ${{ secrets.CODECOV_TOKEN }}
+      - name: Upload Package
+        id: upload-package
+        uses: actions/upload-artifact@v7
+        with:
+          name: package
+          path: packages/
 
-    - name: Pack
-      id: pack
-      run: dotnet pack ./src/**/*.csproj --no-restore -c Release -v quiet -o nuget -p:ContinuousIntegrationBuild=true -p:VersionPrefix=${VERSION_PREFIX} -p:VersionSuffix=${VERSION_SUFFIX}
-      env:
-        VERSION_PREFIX: ${{ steps.initialize.outputs.version_prefix }}
-        VERSION_SUFFIX: ${{ steps.initialize.outputs.version_suffix }}
+  framework:
+    name: .NET Framework
+    runs-on: windows-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
 
-    - name: Setup
-      id: setup
-      uses: nuget/setup-nuget@v1
-      with:
-        nuget-api-key: ${{ secrets.NUGET_API_KEY }}
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v7
 
-    - name: Publish
-      id: publish
-      if: ${{ github.ref == 'refs/heads/main' }}
-      run: nuget push nuget/*.nupkg -src https://api.nuget.org/v3/index.json
+      - name: Setup .NET
+        id: setup
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '10.0.x'
+
+      # The .NET Standard 2.0 build, tested where most of its users live: .NET Framework 4.8.
+      - name: Test
+        id: test
+        run: dotnet test tests/SimpleDateTimeProvider.Tests.Unit --configuration Release --framework net48
+
+  analysis:
+    name: Static Analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ["actions", "csharp"]
+
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v7
+
+      - name: Initialize
+        id: initialize
+        uses: github/codeql-action/init@v4
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: none
+          queries: security-and-quality
+
+      - name: Analysis
+        id: analysis
+        uses: github/codeql-action/analyze@v4
+        with:
+          category: "/language:${{ matrix.language }}"
+
+  dependencies:
+    name: Dependency Review
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'pull_request' }}
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Review
+        id: review
+        uses: actions/dependency-review-action@v5
+        with:
+          fail-on-severity: high
+          allow-licenses: MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause
+          comment-summary-in-pr: on-failure
+          show-openssf-scorecard: false
+
+  release:
+    name: Release Check
+    runs-on: ubuntu-latest
+    needs: [build, framework, analysis]
+    # Real releases come from main on the 1st or a manual run; dry runs can come from any branch.
+    if: >-
+      ${{ github.repository_owner == 'stphnwlsh' && (
+        (github.ref == 'refs/heads/main' && github.event.schedule == '17 9 1 * *') ||
+        (github.event_name == 'workflow_dispatch' && inputs.run == 'release' && (inputs.dry-run || github.ref == 'refs/heads/main'))
+      ) }}
+    permissions:
+      contents: read
+
+    outputs:
+      publish: ${{ steps.check.outputs.publish }}
+      dry-run: ${{ steps.check.outputs.dry-run }}
+
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      # Only src/ ends up in the package. A month of test, sample or pipeline updates is not worth
+      # a new version on NuGet, so those wait until something people actually install has changed.
+      - name: Check Changes
+        id: check
+        run: |
+          LATEST=$(gh release view --json tagName --jq .tagName 2>/dev/null || true)
+
+          if [[ -z "$LATEST" ]]; then
+            echo "No previous release"
+            PUBLISH=true
+          elif [[ "$FORCE" == 'true' ]]; then
+            echo "Forced release"
+            PUBLISH=true
+          elif git diff --quiet "$LATEST" HEAD -- src; then
+            echo "Nothing in src/ has changed since $LATEST, skipping the release"
+            PUBLISH=false
+          else
+            echo "Changes since $LATEST:"
+            git diff --stat "$LATEST" HEAD -- src
+            PUBLISH=true
+          fi
+
+          echo "publish=$PUBLISH" >> "$GITHUB_OUTPUT"
+          echo "dry-run=${DRY_RUN:-false}" >> "$GITHUB_OUTPUT"
+          {
+            echo "### Release Check"
+            echo "Latest release: ${LATEST:-none}. Publish: $PUBLISH. Dry run: ${DRY_RUN:-false}."
+          } >> "$GITHUB_STEP_SUMMARY"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FORCE: ${{ inputs.force }}
+          DRY_RUN: ${{ inputs.dry-run }}
+        shell: bash
+
+  publish:
+    name: Publish
+    runs-on: ubuntu-latest
+    needs: [build, release]
+    if: ${{ needs.release.outputs.publish == 'true' }}
+    permissions:
+      artifact-metadata: write
+      attestations: write
+      contents: write
+      id-token: write
+
+    steps:
+      - name: Download Package
+        id: download-package
+        uses: actions/download-artifact@v8
+        with:
+          name: package
+          path: packages
+
+      - name: Login to NuGet
+        id: nuget-login
+        uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841 # v1.2.0
+        with:
+          user: ${{ secrets.NUGET_USER }}
+
+      - name: Release Notes
+        id: notes
+        run: |
+          if [[ "$EVENT" == 'schedule' ]]; then
+            NOTES="Monthly release for $(date +'%B %Y'). SimpleDateTimeProvider is released on the 1st of the month when something in the package has changed."
+          else
+            NOTES="Out-of-cycle release. SimpleDateTimeProvider is normally released on the 1st of the month when something in the package has changed."
+          fi
+          echo "notes=$NOTES" >> "$GITHUB_OUTPUT"
+          {
+            echo "### Publish${DRY_RUN:+ (dry run)}"
+            echo "Packages: \`$(find packages -type f -printf '%f ')\`"
+            echo "Release: \`$VERSION\`"
+            echo
+            echo "$NOTES"
+          } >> "$GITHUB_STEP_SUMMARY"
+        env:
+          EVENT: ${{ github.event_name }}
+          VERSION: ${{ needs.build.outputs.version }}
+          DRY_RUN: ${{ needs.release.outputs.dry-run == 'true' && 'yes' || '' }}
+        shell: bash
+
+      - name: Attest
+        id: attest
+        if: ${{ needs.release.outputs.dry-run != 'true' }}
+        uses: actions/attest@v4
+        with:
+          subject-path: packages/*.nupkg
+
+      - name: NuGet Push
+        id: nuget-push
+        if: ${{ needs.release.outputs.dry-run != 'true' }}
+        run: dotnet nuget push "packages/*.nupkg" --source https://api.nuget.org/v3/index.json --api-key "$API_KEY" --skip-duplicate
+        env:
+          API_KEY: ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
+
+      - name: GitHub Release
+        id: github-release
+        if: ${{ needs.release.outputs.dry-run != 'true' }}
+        run: gh release create "$VERSION" packages/* --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title "$VERSION" --notes "$NOTES" --generate-notes
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.build.outputs.version }}
+          NOTES: ${{ steps.notes.outputs.notes }}
+        shell: bash

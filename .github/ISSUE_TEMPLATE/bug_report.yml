@@ -1,0 +1,50 @@
+name: Bug report
+description: Something in SimpleDateTimeProvider doesn't work the way the README says it should.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time. Please search the [existing issues](https://github.com/stphnwlsh/SimpleDateTimeProvider/issues) first, and report security problems through the [security policy](https://github.com/stphnwlsh/SimpleDateTimeProvider/security/policy) instead.
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: A clear description of the bug.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: What you ran, with what inputs. "It doesn't work" is a feeling, not a reproduction.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+      description: What you expected to happen instead.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Operating system, runner image or tool versions, whichever apply.
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs or output
+      description: Paste any error output. It's rendered as code, so no backticks needed.
+      render: shell
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched the existing issues and this hasn't been reported yet.
+          required: true
+        - label: I agree to follow this project's [code of conduct](https://github.com/stphnwlsh/SimpleDateTimeProvider/blob/main/CODE_OF_CONDUCT.md).
+          required: true

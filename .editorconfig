@@ -1,11 +1,4 @@
-# Version: 4.0.0 (Using https://semver.org/)
-# Updated: 2021-10-12
-# See https://github.com/RehanSaeed/EditorConfig/releases for release notes.
-# See https://github.com/RehanSaeed/EditorConfig for updates to this file.
-# See http://EditorConfig.org for more information about .editorconfig files.
-
-##########################################
-# Common Settings# Version: 4.1.1 (Using https://semver.org/)
+# Version: 4.1.1 (Using https://semver.org/)
 # Updated: 2022-05-23
 # See https://github.com/RehanSaeed/EditorConfig/releases for release notes.
 # See https://github.com/RehanSaeed/EditorConfig for updates to this file.
@@ -910,3 +903,14 @@ dotnet_diagnostic.IDE0161.severity = none
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 ##########################################
+
+##########################################
+# SimpleDateTimeProvider
+##########################################
+
+# The library still compiles as C# 7.3 for .NET Standard 2.0, so newer syntax stays a suggestion
+# rather than an error: no interface member modifiers, no field keyword, no primary constructors.
+[*.cs]
+dotnet_style_require_accessibility_modifiers = for_non_interface_members:warning
+dotnet_diagnostic.IDE0032.severity = suggestion
+dotnet_diagnostic.IDE0290.severity = suggestion
