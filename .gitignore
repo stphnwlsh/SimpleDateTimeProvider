@@ -363,3 +363,6 @@ out/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Coverlet results
+coverage.*.json

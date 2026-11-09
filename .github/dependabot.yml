@@ -1,0 +1,41 @@
+version: 2
+
+# One pull request a month, on the 15th, with everything in it. The Build Pipeline runs its
+# maintenance build the same morning, and anything merged that changes src/ ships on the 1st.
+multi-ecosystem-groups:
+  monthly-dependencies:
+    schedule:
+      interval: "cron"
+      cronjob: "0 9 15 * *"
+      timezone: "America/Chicago"
+
+updates:
+  - package-ecosystem: "nuget"
+    directory: "/"
+    patterns: ["*"]
+    multi-ecosystem-group: "monthly-dependencies"
+    # The library has no dependencies at all, so nothing here can change what people install.
+    # These are the test packages that run the suite on .NET Framework 4.8, which is how we know
+    # the .NET Standard 2.0 build still works there. A new major version is where support for
+    # old frameworks tends to get dropped, so majors wait for a person to check the framework
+    # list first. Minor and patch updates still come through every month.
+    ignore:
+      - dependency-name: "Microsoft.NET.Test.Sdk"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "xunit"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "xunit.runner.visualstudio"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "AutoFixture.Xunit2"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "Shouldly"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "coverlet.msbuild"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "System.Text.Json"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    patterns: ["*"]
+    multi-ecosystem-group: "monthly-dependencies"

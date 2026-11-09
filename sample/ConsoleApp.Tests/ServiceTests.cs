@@ -27,7 +27,7 @@ public class SystemDateTimeProviderTests
     }
 
     [Fact]
-    public void Now_ShouldReturn_MockedToday()
+    public void Today_ShouldReturn_MockedToday()
     {
         // Arrange
         var provider = new MockDateTimeProvider();
@@ -45,7 +45,7 @@ public class SystemDateTimeProviderTests
     }
 
     [Fact]
-    public void Now_ShouldReturn_MockedUtcNow()
+    public void UtcNow_ShouldReturn_MockedUtcNow()
     {
         // Arrange
         var provider = new MockDateTimeProvider();

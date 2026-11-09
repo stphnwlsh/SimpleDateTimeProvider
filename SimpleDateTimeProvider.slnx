@@ -1,0 +1,21 @@
+<Solution>
+  <Folder Name="/sample/">
+    <Project Path="sample/ConsoleApp.Tests/ConsoleApp.Tests.csproj" />
+    <Project Path="sample/ConsoleApp/ConsoleApp.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitattributes" />
+    <File Path=".gitignore" />
+    <File Path="global.json" />
+    <File Path="LICENSE.md" />
+    <File Path="NuGet.config" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/SimpleDateTimeProvider/SimpleDateTimeProvider.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/SimpleDateTimeProvider.Tests.Unit/SimpleDateTimeProvider.Tests.Unit.csproj" />
+  </Folder>
+</Solution>
