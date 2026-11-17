@@ -106,7 +106,7 @@ Bug reports, ideas and pull requests are all welcome. [CONTRIBUTING.md](CONTRIBU
 
 A few people showed me why mocking `DateTime` is worth the trouble. Thanks to [Andrew Harcourt](https://github.com/uglybugger) for pushing it at unnamed previous employers, and to Andrew Wickens and Jared Wilton, my team at Tigerspike, for keeping me honest and always learning.
 
-If it saves you some time, you can [sponsor the work](https://github.com/sponsors/stphnwlsh). It also funds [Lean Mean Clean Apps](https://leanmeancleanapps.github.io), and the coffee.
+If it saves you some time, you can [sponsor the work](https://github.com/sponsors/stphnwlsh). It also funds [Lean Mean Clean Apps](https://leanmeanclean.dev), and the coffee.
 
 ## Licence
 
